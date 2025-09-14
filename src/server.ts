@@ -1,13 +1,20 @@
-import { app } from "./app";
-import { AppDataSource } from "./data-source";
-import "dotenv/config";
+import { app } from './app';
+import 'dotenv/config';
+import prisma from './prisma/client';
 
-AppDataSource.initialize()
-  .then(() => {
-    const PORT = process.env.PORT;
-    const runningMsg: string = `app listening on port ${PORT}`;
+const PORT = process.env.PORT || 3000;
+const runningMsg: string = `App is listening on port ${PORT}`;
+
+const runServer = async () => {
+  try {
+    await prisma.$connect();
     app.listen(PORT, () => {
       console.log(runningMsg);
     });
-  })
-  .catch((error) => console.log(error));
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+runServer();
