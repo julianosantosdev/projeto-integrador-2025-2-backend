@@ -1,14 +1,5 @@
 import express, { Express } from 'express';
-// import { loginRoutes } from './routes/login.route';
-// import { userRoutes } from './routes/user.routes';
-
-// const app: Application = express();
-// app.use(express.json());
-
-// app.use('/login', loginRoutes);
-// app.use('/user', userRoutes);
-
-// export { app };
+import RoutesMain from './routes/RoutesMain';
 
 class App {
     public app: Express;
@@ -23,7 +14,9 @@ class App {
         this.app.use(express.json());
     }
 
-    routes() {}
+    routes() {
+        this.app.use(RoutesMain);
+    }
 }
 
 export default new App().app;
