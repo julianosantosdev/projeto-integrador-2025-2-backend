@@ -15,9 +15,9 @@ model User {
   password          String
   profile_image_url String
   bio               String
-  created_at        DateTime  @default(now())
-  role              Role      @default(USER)
   premium           Boolean   @default(false)
+  role              Role      @default(USER)
+  created_at        DateTime  @default(now())
 }
 
 enum Role {
