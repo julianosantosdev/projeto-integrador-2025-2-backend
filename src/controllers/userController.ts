@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { IServiceUser } from '../service/user/IUserService';
 import { UserResponseDTO } from '../entity/UserEntity';
+import bcrypt from 'bcryptjs';
 import { UserSchemaCreate } from '../schemas/SchemaUserCreate';
 
 class UserController {
@@ -22,10 +23,12 @@ class UserController {
                 });
             }
 
+            const hashPassword = await bcrypt.hash(password, 10);
+
             const newUser = await this.service.createUser({
                 email,
                 name,
-                password,
+                password: hashPassword,
                 premium,
                 username,
                 profileImage: profile_image_url ?? null,
@@ -37,7 +40,7 @@ class UserController {
         }
     };
 
-    findById = async (req: Request, res: Response) => {
+    findById = async (req: Request, res: Response): Promise<Response<UserResponseDTO>> => {
         try {
             const { id } = req.params;
 
@@ -53,9 +56,8 @@ class UserController {
 
             return res.status(200).json(user);
         } catch (error) {
-            if (error == '404') {
-                res.status(404).json({ message: 'Usuário não encontrado' });
-            }
+            console.error('Erro ao buscar usuário por ID:', error);
+            return res.status(500).json({ message: 'Erro interno do servidor' });
         }
     };
 }
