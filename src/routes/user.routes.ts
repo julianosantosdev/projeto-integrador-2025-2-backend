@@ -13,7 +13,8 @@ class UserRoutes {
     }
 
     userRoutes() {
-        this.routes.post('/', this.controller.createUser.bind(this.controller));
+        this.routes.post('/', this.controller.createUser);
+        this.routes.get('/:id', this.controller.findById);
     }
 }
 

@@ -9,8 +9,8 @@ class UserService implements IServiceUser {
         this.repository = new PrismaClient();
     }
 
-    createUser(data: UserCreateDTO): Promise<UserResponseDTO> {
-        const user = this.repository.user.create({
+    async createUser(data: UserCreateDTO): Promise<UserResponseDTO> {
+        const user = await this.repository.user.create({
             data: {
                 name: data.name,
                 email: data.email,
@@ -31,6 +31,27 @@ class UserService implements IServiceUser {
         });
 
         return user;
+    }
+
+    public async findById(id: string): Promise<UserResponseDTO | null> {
+        const user = await this.repository.user.findFirst({
+            where: { id },
+        });
+
+        if (!user) {
+            return null;
+        }
+
+        return {
+            id: user.id,
+            bio: user.bio,
+            email: user.email,
+            name: user.name,
+            premium: user.premium,
+            profile_image_url: user.profile_image_url,
+            role: user.role,
+            username: user.username,
+        };
     }
 }
 
