@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserCreateDTO, UserResponseDTO } from '../../entity/UserEntity';
 import { IServiceUser } from './IUserService';
 import { PrismaClient } from '@prisma/client';
@@ -52,6 +53,18 @@ class UserService implements IServiceUser {
             role: user.role,
             username: user.username,
         };
+    }
+
+    async findByEmail(email: string): Promise<any> {
+        const user = await this.repository.user.findFirst({
+            where: { email },
+        });
+
+        if (!user) {
+            return null;
+        }
+
+        return user;
     }
 }
 

@@ -60,6 +60,26 @@ class UserController {
             return res.status(500).json({ message: 'Erro interno do servidor' });
         }
     };
+
+    findbyEmail = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const { email } = req.params;
+
+            if (!email) {
+                return res.status(400).json({ message: "O parâmetro 'email' não foi passado" });
+            }
+
+            const user = await this.service.findByEmail(email);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Email do usuário não encontrado' });
+            }
+
+            return res.status(200).json(user);
+        } catch {
+            return res.status(500).json({ message: 'Erro interno do servidor' });
+        }
+    };
 }
 
 export { UserController };

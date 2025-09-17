@@ -15,6 +15,7 @@ class UserRoutes {
     userRoutes() {
         this.routes.post('/', this.controller.createUser);
         this.routes.get('/:id', this.controller.findById);
+        this.routes.get('/email/:email', this.controller.findbyEmail);
     }
 }
 
