@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import RoutesMain from './routes/routesMain';
+import ErrosMiddleware from './middlewares/ErrosMiddleware';
 
 class App {
     public app: Express;
@@ -8,14 +9,19 @@ class App {
         this.app = express();
         this.middlerwares();
         this.routes();
+        this.errors();
     }
 
-    middlerwares() {
+    private middlerwares() {
         this.app.use(express.json());
     }
 
-    routes() {
+    private routes() {
         this.app.use(RoutesMain);
+    }
+
+    private errors() {
+        this.app.use(ErrosMiddleware.errorsMiddleware);
     }
 }
 
