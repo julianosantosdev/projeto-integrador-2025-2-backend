@@ -22,6 +22,15 @@ export type UserCreateDTO = {
     premium: boolean;
 };
 
+export interface UpdateUserDTO {
+    email?: string;
+    name?: string;
+    username?: string;
+    password?: string;
+    profile_image_url?: string | null;
+    premium?: boolean;
+}
+
 export type UserResponseDTO = {
     id: string;
     username: string;

@@ -51,6 +51,18 @@ class UserController {
 
         return res.status(200).json(user);
     };
+
+    updatedUser = async (req: Request, res: Response): Promise<Response> => {
+        const { id } = req.params;
+        const body = req.body;
+        console.log(body);
+        if (!id) throw new ErrorNotFound('Não foi passado parâmetro id corretamente.');
+        if (!body) throw new ErrorNotFound('Não foi passado body corretamente.');
+
+        const user = await this.service.updateUser(body, id);
+
+        return res.status(201).json(user);
+    };
 }
 
 export { UserController };

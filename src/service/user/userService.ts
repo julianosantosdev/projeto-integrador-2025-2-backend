@@ -1,4 +1,4 @@
-import { UserCreateDTO, UserResponseDTO } from '../../entity/UserEntity';
+import { UpdateUserDTO, UserCreateDTO, UserResponseDTO } from '../../entity/UserEntity';
 import { ErrorNotFound } from '../../errors/ErrorNotFound';
 import { IServiceUser } from './IUserService';
 import bcrypt from 'bcryptjs';
@@ -108,6 +108,53 @@ class UserService implements IServiceUser {
         const usernameExists = !!existUsername;
 
         return { emailExists, usernameExists };
+    }
+
+    async updateUser(data: UpdateUserDTO, id: string): Promise<any> {
+        const user = await this.repository.user.findUnique({ where: { id } });
+        if (!user) throw new ErrorNotFound('Usuário não encontrado');
+
+        if (data.email && data.email != user.email) {
+            const emailExist = await this.repository.user.findUnique({
+                where: { email: data.email },
+            });
+            if (emailExist) throw new ErrorConflict('Email já está em uso');
+        }
+        if (data.username && data.username != user.username) {
+            const userExist = await this.repository.user.findUnique({
+                where: { username: data.username },
+            });
+            if (userExist) throw new ErrorConflict('Username já existe');
+        }
+
+        const passwrod_hash = data.password ? await bcrypt.hash(data.password, 10) : undefined;
+
+        const prismaData: UpdateUserDTO = {
+            email: data.email,
+            name: data.name,
+            username: data.username,
+            profile_image_url: data.profile_image_url,
+            premium: data.premium,
+            password: passwrod_hash,
+        };
+
+        const arrayupdate = Object.entries(prismaData).map((chave) => {
+            return { [chave]: newObjeto[chave] };
+        });
+
+        const updated = await this.repository.user.update({
+            where: { id },
+            data: prismaData,
+            select: {
+                bio: true,
+                email: true,
+                name: true,
+                profile_image_url: true,
+                username: true,
+            },
+        });
+
+        return updated;
     }
 }
 
