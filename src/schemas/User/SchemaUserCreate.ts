@@ -14,8 +14,9 @@ export const UserSchemaUpdate = z.object({
     email: z.email({ message: 'Email inválido' }).optional(),
     password: z.string().min(6, 'Senha deve ter no minimo 6 caracteres').optional(),
     profile_image_url: z.url().nullish().optional(),
+    premium: z.boolean().optional(),
 });
 
 export const UserSchemaEmail = z.object({
-    email: z.email(),
+    email: z.email({ message: 'E-mail inválido' }),
 });

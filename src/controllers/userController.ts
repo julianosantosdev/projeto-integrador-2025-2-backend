@@ -55,8 +55,7 @@ class UserController {
             throw new ErrorBadRequest('Faltando passar o parâmetro do id');
         }
 
-        const userUpdate = this.service.userUpdate(id, req.body);
-
+        const userUpdate = await this.service.userUpdate(id, req.body);
         return res.status(200).json(userUpdate);
     };
 

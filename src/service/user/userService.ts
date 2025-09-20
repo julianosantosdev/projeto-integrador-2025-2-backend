@@ -3,7 +3,6 @@ import { ErrorNotFound } from '../../errors/ErrorNotFound';
 import { IServiceUser } from './IUserService';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
-import { ErrorConflict } from '../../errors/ErrorConflict';
 import { prismaInstance } from '../../Factories/factoryPrisma';
 
 class UserService implements IServiceUser {
@@ -30,9 +29,9 @@ class UserService implements IServiceUser {
             },
             select: {
                 id: true,
-                username: true,
-                name: true,
                 email: true,
+                name: true,
+                username: true,
                 profile_image_url: true,
                 premium: true,
                 role: true,
@@ -50,13 +49,13 @@ class UserService implements IServiceUser {
             where: { id },
             select: {
                 id: true,
-                bio: true,
                 email: true,
                 name: true,
-                premium: true,
-                profile_image_url: true,
-                role: true,
                 username: true,
+                profile_image_url: true,
+                premium: true,
+                role: true,
+                bio: true,
             },
         });
 
@@ -74,13 +73,13 @@ class UserService implements IServiceUser {
             where: { email },
             select: {
                 id: true,
-                bio: true,
                 email: true,
                 name: true,
-                premium: true,
-                profile_image_url: true,
-                role: true,
                 username: true,
+                profile_image_url: true,
+                premium: true,
+                role: true,
+                bio: true,
             },
         });
 
@@ -109,13 +108,19 @@ class UserService implements IServiceUser {
             data.password = hashPassword;
         }
 
-        const user = this.repository.user.update({
+        const user = await this.repository.user.update({
             where: { id },
             data,
             select,
         });
 
-        return user;
+        if (data.password) {
+            user.password = 'Senha alterada :p';
+        }
+
+        console.log(user);
+
+        return { user };
     }
 }
 

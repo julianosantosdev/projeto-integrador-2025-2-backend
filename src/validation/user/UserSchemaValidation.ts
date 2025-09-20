@@ -1,6 +1,7 @@
+import { UserUpdateDTO } from '../../entity/UserEntity';
 import { ErrorBadRequest } from '../../errors/ErrorBadRequest';
 import { ErrorConflict } from '../../errors/ErrorConflict';
-import { UserSchemaCreate, UserSchemaEmail } from '../../schemas/User/SchemaUserCreate';
+import { UserSchemaCreate, UserSchemaEmail, UserSchemaUpdate } from '../../schemas/User/SchemaUserCreate';
 
 export function ValidationCreate(data: undefined) {
     console.log('Validandno schema');
@@ -15,7 +16,19 @@ export function ValidationCreate(data: undefined) {
 }
 
 export function ValidationEmail(email: string) {
-    const valid = UserSchemaEmail.safeParse(email);
+    console.log(email);
+    const valid = UserSchemaEmail.safeParse({ email });
+
+    if (!valid.success) {
+        const details = valid.error.flatten().fieldErrors;
+        return details;
+    } else {
+        return null;
+    }
+}
+
+export function ValidationUpdate(data: UserUpdateDTO) {
+    const valid = UserSchemaUpdate.safeParse(data);
 
     if (!valid.success) {
         const details = valid.error.flatten().fieldErrors;

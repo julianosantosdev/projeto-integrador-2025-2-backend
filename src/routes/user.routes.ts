@@ -15,10 +15,8 @@ class UserRoutes {
 
     userRoutes() {
         this.routes.post('/', ValidateMiddleware.ValidationCreate, this.controller.userCreate);
-
         this.routes.get('/email/:email', ValidateMiddleware.ValidationFindByEmail, this.controller.findbyEmail);
-        this.routes.put('/update/:id', this.controller.userUpdate);
-
+        this.routes.put('/update/:id', ValidateMiddleware.ValidationUpdated, this.controller.userUpdate);
         this.routes.get('/:id', this.controller.findById);
     }
 }
