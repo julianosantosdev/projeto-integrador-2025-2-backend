@@ -13,9 +13,10 @@ class UserRoutes {
     }
 
     userRoutes() {
-        this.routes.post('/', this.controller.createUser);
+        this.routes.post('/', this.controller.userCreate);
         this.routes.get('/:id', this.controller.findById);
         this.routes.get('/email/:email', this.controller.findbyEmail);
+        this.routes.put('/update/:id', this.controller.userUpdate);
     }
 }
 
