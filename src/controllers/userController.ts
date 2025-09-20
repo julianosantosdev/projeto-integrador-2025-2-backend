@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { IServiceUser } from '../service/user/IUserService';
 import { UserResponseDTO } from '../entity/UserEntity';
-import { UserSchemaCreate } from '../schemas/SchemaUserCreate';
+import { UserSchemaCreate } from '../schemas/User/SchemaUserCreate';
 import { ErrorNotFound } from '../errors/ErrorNotFound';
 import { ErrorBadRequest } from '../errors/ErrorBadRequest';
 
@@ -15,7 +15,7 @@ class UserController {
 
         if (!isValid.success) {
             const details = isValid.error.flatten().fieldErrors;
-            throw new ErrorBadRequest('Erro na validação de usuário', details);
+            throw new ErrorBadRequest(details);
         }
 
         const newUser = await this.service.createUser({
