@@ -3,7 +3,7 @@ import { IServiceUser } from '../service/user/IUserService';
 import { UserResponseDTO } from '../entity/UserEntity';
 import { UserSchemaCreate } from '../schemas/SchemaUserCreate';
 import { ErrorNotFound } from '../errors/ErrorNotFound';
-import { ErrorSchema } from '../errors/ErrorSchema';
+import { ErrorBadRequest } from '../errors/ErrorBadRequest';
 
 class UserController {
     constructor(private service: IServiceUser) {}
@@ -15,7 +15,7 @@ class UserController {
 
         if (!isValid.success) {
             const details = isValid.error.flatten().fieldErrors;
-            throw new ErrorSchema('Erro na validação de usuário', details);
+            throw new ErrorBadRequest('Erro na validação de usuário', details);
         }
 
         const newUser = await this.service.createUser({

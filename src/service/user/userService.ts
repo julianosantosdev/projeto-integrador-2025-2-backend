@@ -19,7 +19,7 @@ class UserService implements IServiceUser {
             const details = [];
             if (emailExists) details.push({ field: 'Email', message: 'E=mail já cadastrado' });
             if (usernameExists) details.push({ field: 'username', message: 'Usuário já está em uso' });
-            throw new ErrorConflict('Falha na validação', details);
+            throw new ErrorConflict(details);
         }
 
         const hashPassword = await bcrypt.hash(data.password, 10);
@@ -90,10 +90,7 @@ class UserService implements IServiceUser {
         };
     }
 
-    async findByUserAndEmail(
-        email: string,
-        username: string,
-    ): Promise<{ emailExists: boolean; usernameExists: boolean }> {
+    async findByUserAndEmail(email: string, username: string): Promise<{ emailExists: boolean; usernameExists: boolean }> {
         const existEmail = await this.repository.user.findFirst({
             where: { email },
             select: { id: true },
