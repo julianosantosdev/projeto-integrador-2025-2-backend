@@ -4,7 +4,7 @@ import { IServiceUser } from './IUserService';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
 import { ErrorConflict } from '../../errors/ErrorConflict';
-import { prismaInstance } from '../../Factories/feactoryPrisma';
+import { prismaInstance } from '../../Factories/factoryPrisma';
 
 class UserService implements IServiceUser {
     private repository: PrismaClient;
@@ -13,17 +13,12 @@ class UserService implements IServiceUser {
         this.repository = prismaInstance;
     }
 
+    //
+
     async createUser(data: UserCreateDTO): Promise<UserResponseDTO> {
-        const { emailExists, usernameExists } = await this.findByUserAndEmail(data.email, data.username);
-
-        if (emailExists || usernameExists) {
-            const details = [];
-            if (emailExists) details.push({ field: 'Email', message: 'E=mail já cadastrado' });
-            if (usernameExists) details.push({ field: 'username', message: 'Usuário já está em uso' });
-            throw new ErrorConflict(details);
-        }
-
+        console.log('Cheguei no service');
         const hashPassword = await bcrypt.hash(data.password, 10);
+        console.log('Senha hash', hashPassword);
 
         const user = await this.repository.user.create({
             data: {
@@ -48,26 +43,28 @@ class UserService implements IServiceUser {
         return user;
     }
 
+    //
+
     public async findById(id: string): Promise<UserResponseDTO | null> {
         const user = await this.repository.user.findFirst({
             where: { id },
+            select: {
+                id: true,
+                bio: true,
+                email: true,
+                name: true,
+                premium: true,
+                profile_image_url: true,
+                role: true,
+                username: true,
+            },
         });
 
-        console.log(user);
         if (!user) {
             throw new ErrorNotFound('Usuário não cadastrado');
         }
 
-        return {
-            id: user.id,
-            bio: user.bio,
-            email: user.email,
-            name: user.name,
-            premium: user.premium,
-            profile_image_url: user.profile_image_url,
-            role: user.role,
-            username: user.username,
-        };
+        return user;
     }
 
     //
@@ -75,22 +72,23 @@ class UserService implements IServiceUser {
     async findByEmail(email: string): Promise<UserResponseDTO | null> {
         const user = await this.repository.user.findFirst({
             where: { email },
+            select: {
+                id: true,
+                bio: true,
+                email: true,
+                name: true,
+                premium: true,
+                profile_image_url: true,
+                role: true,
+                username: true,
+            },
         });
-        console.log(email);
+
         if (!user) {
             throw new ErrorNotFound('Email não cadastrado');
         }
 
-        return {
-            id: user.id,
-            bio: user.bio,
-            email: user.email,
-            name: user.name,
-            premium: user.premium,
-            profile_image_url: user.profile_image_url,
-            role: user.role,
-            username: user.username,
-        };
+        return user;
     }
 
     //
@@ -118,23 +116,6 @@ class UserService implements IServiceUser {
         });
 
         return user;
-    }
-
-    async findByUserAndEmail(email: string, username: string): Promise<{ emailExists: boolean; usernameExists: boolean }> {
-        const existEmail = await this.repository.user.findFirst({
-            where: { email },
-            select: { id: true },
-        });
-
-        const existUsername = await this.repository.user.findFirst({
-            where: { username },
-            select: { id: true },
-        });
-
-        const emailExists = !!existEmail;
-        const usernameExists = !!existUsername;
-
-        return { emailExists, usernameExists };
     }
 }
 
