@@ -13,14 +13,13 @@ class UserController {
 
         const profile_image_url = file ? `localhost:3000/perfil-image/${file.filename}` : null;
         console.log('filename: ', file?.filename);
-
         const newUser = await this.service.createUser({
             email,
             name,
             password,
             username,
             premium,
-            profileImage: profile_image_url,
+            profile_image_url,
         });
 
         return res.status(201).json(newUser);

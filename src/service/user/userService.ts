@@ -25,7 +25,7 @@ class UserService implements IServiceUser {
                     email: data.email,
                     password: hashPassword,
                     username: data.username,
-                    profile_image_url: data.profileImage ?? null,
+                    profile_image_url: data.profile_image_url ?? null,
                 },
                 select: {
                     id: true,
