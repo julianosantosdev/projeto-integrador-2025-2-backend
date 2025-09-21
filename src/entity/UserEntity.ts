@@ -18,8 +18,17 @@ export type UserCreateDTO = {
     name: string;
     email: string;
     password: string;
-    profileImage?: string;
+    profile_image_url?: string | null;
     premium: boolean;
+};
+
+export type UserUpdateDTO = {
+    username?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+    profile_image_url?: string;
+    premium?: boolean;
 };
 
 export type UserResponseDTO = {
