@@ -15,31 +15,34 @@ class UserService implements IServiceUser {
     //
 
     async createUser(data: UserCreateDTO): Promise<UserResponseDTO> {
-        console.log('Cheguei no service');
         const hashPassword = await bcrypt.hash(data.password, 10);
         console.log('Senha hash', hashPassword);
 
-        const user = await this.repository.user.create({
-            data: {
-                name: data.name,
-                email: data.email,
-                password: hashPassword,
-                username: data.username,
-                profile_image_url: data.profileImage ?? null,
-            },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                username: true,
-                profile_image_url: true,
-                premium: true,
-                role: true,
-                bio: true,
-            },
-        });
+        try {
+            const user = await this.repository.user.create({
+                data: {
+                    name: data.name,
+                    email: data.email,
+                    password: hashPassword,
+                    username: data.username,
+                    profile_image_url: data.profileImage ?? null,
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    name: true,
+                    username: true,
+                    profile_image_url: true,
+                    premium: true,
+                    role: true,
+                    bio: true,
+                },
+            });
 
-        return user;
+            return user;
+        } catch (erros) {
+            throw new Error('Erro ao cadastrar no banco');
+        }
     }
 
     //

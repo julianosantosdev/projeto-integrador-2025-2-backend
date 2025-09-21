@@ -1,10 +1,10 @@
 import { prismaInstance } from '../../Factories/factoryPrisma';
 
-export async function VerifiyUserAndEmailExist(Userid: string, email?: string, username?: string) {
+export async function VerifiyUserAndEmailExist(email?: string, username?: string, Userid?: string) {
     if (!username && !email) {
         return null;
     }
-
+    console.log('email: ', email, ' username: ', username);
     const details = [];
 
     if (email) {
@@ -14,8 +14,11 @@ export async function VerifiyUserAndEmailExist(Userid: string, email?: string, u
                 id: true,
             },
         });
-
-        if (ExEmail && ExEmail.id !== Userid) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+        if (Userid) {
+            if (ExEmail && ExEmail.id !== Userid) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+        } else {
+            if (ExEmail) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+        }
     }
 
     if (username) {
@@ -25,8 +28,11 @@ export async function VerifiyUserAndEmailExist(Userid: string, email?: string, u
                 id: true,
             },
         });
-        console.log(Userid, 'ExEmail - ', ExUsername?.id);
-        if (ExUsername && ExUsername.id !== Userid) details.push({ field: 'Username', message: 'Usuário já cadastrado' });
+        if (Userid) {
+            if (ExUsername && ExUsername.id !== Userid) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+        } else {
+            if (ExUsername) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+        }
     }
 
     return details.length ? details : null;
