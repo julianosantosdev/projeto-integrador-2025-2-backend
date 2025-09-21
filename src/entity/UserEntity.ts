@@ -18,7 +18,7 @@ export type UserCreateDTO = {
     name: string;
     email: string;
     password: string;
-    profileImage?: string;
+    profileImage?: string | null;
     premium: boolean;
 };
 

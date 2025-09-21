@@ -8,10 +8,11 @@ class UserValidationMiddleware {
     constructor() {}
 
     async ValidationCreate(req: Request, res: Response, next: NextFunction) {
+        console.log('Cheguei na validação');
+        console.log(req.body);
         if (!req.body) {
-            throw new ErrorBadRequest();
+            throw new ErrorBadRequest('Não foi passado o body de criação corretamente');
         }
-
         const details = ValidationCreate(req.body);
         if (details) {
             throw new ErrorBadRequest('Erro na requisição', details);

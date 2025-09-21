@@ -8,15 +8,19 @@ class UserController {
     constructor(private service: IServiceUser) {}
 
     userCreate = async (req: Request, res: Response): Promise<Response<UserResponseDTO>> => {
-        const { username, name, email, password, profile_image_url, premium } = req.body;
-        console.log('cheguei no controller');
+        const { username, name, email, password, premium } = req.body;
+        const file = req.file;
+
+        const profile_image_url = file ? `localhost:3000/perfil-image/${file.filename}` : null;
+        console.log('filename: ', file?.filename);
+
         const newUser = await this.service.createUser({
             email,
             name,
             password,
-            premium,
             username,
-            profileImage: profile_image_url ?? null,
+            premium,
+            profileImage: profile_image_url,
         });
 
         return res.status(201).json(newUser);
@@ -53,6 +57,11 @@ class UserController {
         const { id } = req.params;
         if (!id) {
             throw new ErrorBadRequest('Faltando passar o parâmetro do id');
+        }
+        console.log('cheguei no controller');
+        const file = req.file;
+        if (file) {
+            req.body.profile_image_url = `localhost:3000/perfil-image/${file.filename}`;
         }
 
         const userUpdate = await this.service.userUpdate(id, req.body);
