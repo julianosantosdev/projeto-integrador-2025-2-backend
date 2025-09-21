@@ -29,9 +29,9 @@ export async function VerifiyUserAndEmailExist(email?: string, username?: string
             },
         });
         if (Userid) {
-            if (ExUsername && ExUsername.id !== Userid) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+            if (ExUsername && ExUsername.id !== Userid) details.push({ field: 'Username', message: 'Username já cadastrado' });
         } else {
-            if (ExUsername) details.push({ field: 'Email', message: 'E-mail já cadastrado' });
+            if (ExUsername) details.push({ field: 'Username', message: 'Username já cadastrado' });
         }
     }
 
