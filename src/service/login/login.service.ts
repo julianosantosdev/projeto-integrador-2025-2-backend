@@ -9,7 +9,7 @@ import { sign } from 'jsonwebtoken';
 export class LoginService {
     private token: string | undefined;
 
-    async login(payloadLogin: TLoginRequest): Promise<void> {
+    async login(payloadLogin: TLoginRequest): Promise<string> {
         const user: User | null = await prisma.user.findFirst({ where: { email: payloadLogin.email } });
 
         if (!user) {
@@ -33,9 +33,11 @@ export class LoginService {
                 subject: user.id.toString(),
             },
         );
+
+        return this.getToken()!;
     }
 
     public getToken() {
-        return this.token;
+        return this.token!;
     }
 }
