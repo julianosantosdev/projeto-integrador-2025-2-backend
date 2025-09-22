@@ -7,8 +7,7 @@ export class LoginController {
 
     public async handleLogin(request: Request, response: Response): Promise<Response> {
         const payload: TLoginRequest = request.body;
-        this.loginService.login(payload);
-        const token: string = this.loginService.getToken();
+        const token = this.loginService.login(payload);
         return response.status(200).json({ token });
     }
 }
